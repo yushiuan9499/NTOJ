@@ -12,6 +12,7 @@ import tornado.options
 import tornado.process
 import tornado.web
 from redis import asyncio as aioredis
+import structlog
 
 import config
 import url as ur
@@ -51,6 +52,16 @@ def sig_handler(server, db, rs, pool, sig, frame):
     io_loop.add_callback_from_signal(shutdown)
 
 if __name__ == "__main__":
+    # Configure logger
+    structlog.configure(
+        processors=[
+            structlog.contextvars.merge_contextvars,
+            structlog.processors.add_log_level,
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.processors.JSONRenderer()
+        ]
+    )
+
     httpsock = tornado.netutil.bind_sockets(config.PORT)
 
     # tornado.process.fork_processes(4)

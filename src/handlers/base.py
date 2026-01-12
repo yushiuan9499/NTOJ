@@ -9,6 +9,7 @@ import tornado.template
 import tornado.web
 import tornado.websocket
 from redis import asyncio as aioredis
+from structlog import get_logger, contextvars
 
 import config
 from services.contests import ContestService, Contest
@@ -555,6 +556,8 @@ class UnifiedWebSocketHandler(tornado.websocket.WebSocketHandler):
 
 def reqenv(func):
     async def wrap(self, *args, **kwargs):
+        contextvars.clear_contextvars()
+
         path = str(self.request.path)
         if (g := re.search(r"contests/(\d+)/?", path)) is not None:
             contest_id = g.group(1)
@@ -571,8 +574,25 @@ def reqenv(func):
                 )
                 return
 
+            contest_info = {
+                "id": contest_id,
+                "mode": self.contest.contest_mode,
+            }
+            contextvars.bind_contextvars(contest_info=contest_info)
+
         _, acct_id, _ = await UserService.inst.info_sign(self)
         _, self.acct = await UserService.inst.info_acct(acct_id)
+
+        acct_type_mapping = {
+            0: "kernel",
+            3: "user",
+            6: "guest"
+        }
+        acct_info = {
+            "id": acct_id,
+            "type": acct_type_mapping.get(self.acct.acct_type, "unknown"),
+        }
+        contextvars.bind_contextvars(acct_info=acct_info)
 
         ret = await func(self, *args, **kwargs)
         return ret
