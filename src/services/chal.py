@@ -19,6 +19,7 @@ class Compiler(enum.IntEnum):
     JAVA = 7
     ASMC = 8
     ASMCPP = 9
+    TEXT = 10
     ASMAARCH64 = 100
     ASMRISCV64 = 101
     ICX = 102
@@ -42,6 +43,7 @@ COMPILER_INFOS[Compiler.PYTHON3] = CompilerInfo(Compiler.PYTHON3, "python", "CPy
 COMPILER_INFOS[Compiler.JAVA] = CompilerInfo(Compiler.JAVA, "java", "OpenJDK 21.0.11", "java", "java")
 COMPILER_INFOS[Compiler.ASMC] = CompilerInfo(Compiler.ASMC, "asm", "Gas x86_64 Linux 2.44 w/ libc", "asmc", "s")
 COMPILER_INFOS[Compiler.ASMCPP] = CompilerInfo(Compiler.ASMCPP, "asm", "Gas x86_64 Linux 2.44 w/ libstdc++", "asmcpp", "s")
+COMPILER_INFOS[Compiler.TEXT] = CompilerInfo(Compiler.TEXT, "text", "cat (GNU coreutils) 9.7", "cat", "txt")
 COMPILER_INFOS[Compiler.ASMAARCH64] = CompilerInfo(Compiler.ASMAARCH64, "asm-aarch64", "Gas aarch64 Linux 2.42 w/ libc & QEMU", "asm-aarch64", "s")
 COMPILER_INFOS[Compiler.ASMRISCV64] = CompilerInfo(Compiler.ASMRISCV64, "asm-riscv64", "Gas riscv64 Linux 2.42 w/ libc & QEMU", "asm-riscv64", "s")
 COMPILER_INFOS[Compiler.ICX] = CompilerInfo(Compiler.ICX, "c", "Intel(R) oneAPI DPC++/C++ Compiler 2026.0.0 C11", "icx", "c")
